@@ -1,0 +1,14 @@
+#outer_dms_bullets_div{
+	
+}
+
+#outer_dms_bullets_div ul{
+	list-style-type: none;
+	padding: 0px;
+	margin: 0px;
+}
+
+#outer_dms_bullets_div ul li{
+	display: block;
+	line-height: normal;
+}
