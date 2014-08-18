@@ -2,17 +2,17 @@
 
 /*
 
-    Section: Bullets
+    Section: DM Bullets
 
-    Description: Easily add bullet point lists to your Pagelines DMS site.
+    Description: Add custom bullets to your content.
 
     Author: Catapult Impact
 
     Author URI: http://www.catapultimpact.com
 
-    Demo: http://catapultimpact.com/pagelines/bullets/
+    Demo: http://catapultimpact.com/pagelines/dm-bullets/
 	
-	Class Name: catapultimpactDMSBullets
+	Class Name: catapultimpactDMBullets
 
     Version: 1.0
 
@@ -22,7 +22,7 @@
 
 */
 
-class catapultimpactDMSBullets extends PageLinesSection{
+class catapultimpactDMBullets extends PageLinesSection{
 
 	function get_plugin_url() {
 		$plugins_url = plugins_url();
@@ -138,6 +138,11 @@ class catapultimpactDMSBullets extends PageLinesSection{
 					'label'		=> __( 'Icon Color', 'pagelines' ),
 					'type'		=> 'color'
 				),
+				array(
+					'key'		=> 'text_color',
+					'label'		=> __( 'Text Color', 'pagelines' ),
+					'type'		=> 'color'
+				),
 				
 
 			)
@@ -179,6 +184,8 @@ class catapultimpactDMSBullets extends PageLinesSection{
 			if( isset($dmsbullets_padding) && $dmsbullets_padding != '' ){
 				$padding_str = 'padding: '.$dmsbullets_padding.'px;';
 			}
+			
+			$text_color_str = '';
 		?> 
 
 			<div id="outer_dms_bullets_div" style="<?php echo $padding_str; ?>">
@@ -194,6 +201,8 @@ class catapultimpactDMSBullets extends PageLinesSection{
 					$image = pl_array_get( 'image', $dmsbullet );
 					$icon = pl_array_get( 'icon', $dmsbullet );
 					$color = pl_hash( pl_array_get( 'color', $dmsbullet ), false);
+					$text_color = pl_hash( pl_array_get( 'text_color', $dmsbullet ), false);
+					$text_color_str = ( $text_color == '#' ) ? $text_color_str.'blank,' : $text_color_str.$text_color.",";
 					$imgStr = '';
 
 					if( !$image || $image == '' ){
@@ -219,12 +228,11 @@ class catapultimpactDMSBullets extends PageLinesSection{
 					}
 
 		?>
-
-					<li class='iii icon icon-1x icon-<?php echo $icon; ?>' style="<?php echo $line_hgt_str; ?>; color: <?php echo $color; ?>; padding-bottom: <?php echo $dmsbullets_bet_padding; ?>px;" id="dms_bullets_li" >
+					<li class='dms_bullets_li iii icon icon-1x icon-<?php echo $icon; ?>' style="<?php echo $line_hgt_str; ?>; color: <?php echo $color; ?>; padding-bottom: <?php echo $dmsbullets_bet_padding; ?>px;" id="" >
 						
 						<?php echo $imgStr; ?>
 						
-						<span style="color: #000000; margin-left: <?php echo $bullet_to_text_dist; ?>px; <?php echo $margin_top_str; ?> display: block;"><?php echo $text; ?></span>
+						<span style="margin-left: <?php echo $bullet_to_text_dist; ?>px; <?php echo $margin_top_str; ?> display: block;"><?php echo $text; ?></span>
 
 					</li>
 
@@ -233,8 +241,40 @@ class catapultimpactDMSBullets extends PageLinesSection{
 		<?php 	
 
 				}
-
+				
+				$text_color_str = rtrim( $text_color_str,"," );
+				$text_color_str = ltrim( $text_color_str,"," );
+				
 		?>
+				<script>
+					jQuery(document).ready(function(){
+						var text_color_str = '<?php echo $text_color_str; ?>'
+						var text_color_arr = text_color_str.split( ',' );
+						var i = 0;
+						jQuery(".dms_bullets_li").each(function(){
+							if( text_color_arr[i] == 'blank' ){
+								var text_rgba_color = jQuery(".dms_bullets_li").parent().css( 'color' );
+								var text_color = rgb2hex( text_rgba_color );
+								jQuery(this).children('span').css( 'color',text_color );
+							}else{
+								jQuery(this).children('span').css( 'color',text_color_arr[i] );
+							}
+							i++;
+						});
+					});
+					
+					var hexDigits = new Array("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"); 
+
+					//Function to convert hex format to a rgb color
+					function rgb2hex( rgb ){
+						rgb = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+						return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+					}
+
+					function hex( x ){
+						return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
+					}
+				</script>
 
 				</ul>
 
