@@ -167,6 +167,7 @@ class catapultimpactDMBullets extends PageLinesSection{
 		$padding_str = '';
 		$line_hgt_str = '';
 		$margin_top_str = '';
+		$rand = rand();
 		
 		if( $dmsbullets_line_hgt != '' ){
 			$line_hgt_str = 'line-height: '.$dmsbullets_line_hgt.'px;';
@@ -228,7 +229,7 @@ class catapultimpactDMBullets extends PageLinesSection{
 					}
 
 		?>
-					<li class='dms_bullets_li iii icon icon-1x icon-<?php echo $icon; ?>' style="<?php echo $line_hgt_str; ?>; color: <?php echo $color; ?>; padding-bottom: <?php echo $dmsbullets_bet_padding; ?>px;" id="" >
+					<li class='dms_bullets_li_<?php echo $rand; ?> iii icon icon-1x icon-<?php echo $icon; ?>' style="<?php echo $line_hgt_str; ?> color: <?php echo $color; ?>; padding-bottom: <?php echo $dmsbullets_bet_padding; ?>px;" id="" >
 						
 						<?php echo $imgStr; ?>
 						
@@ -241,7 +242,6 @@ class catapultimpactDMBullets extends PageLinesSection{
 		<?php 	
 
 				}
-				
 				$text_color_str = rtrim( $text_color_str,"," );
 				$text_color_str = ltrim( $text_color_str,"," );
 				
@@ -249,11 +249,12 @@ class catapultimpactDMBullets extends PageLinesSection{
 				<script>
 					jQuery(document).ready(function(){
 						var text_color_str = '<?php echo $text_color_str; ?>'
+						var rand = '<?php echo $rand; ?>';
 						var text_color_arr = text_color_str.split( ',' );
 						var i = 0;
-						jQuery(".dms_bullets_li").each(function(){
+						jQuery(".dms_bullets_li_"+rand).each(function(){
 							if( text_color_arr[i] == 'blank' ){
-								var text_rgba_color = jQuery(".dms_bullets_li").parent().css( 'color' );
+								var text_rgba_color = jQuery(this).parent().css( 'color' );
 								var text_color = rgb2hex( text_rgba_color );
 								jQuery(this).children('span').css( 'color',text_color );
 							}else{
